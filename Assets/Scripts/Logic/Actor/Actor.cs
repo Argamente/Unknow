@@ -28,6 +28,9 @@ namespace Argamente.Fight.Actors
         }
 
 
+        public Listener<Transform> onOutofView;
+
+
         private ActionForIdle actionForIdle;
         private ActionForMoveUp actionForMoveUp;
         private ActionForMoveDown actionForMoveDown;
@@ -103,6 +106,15 @@ namespace Argamente.Fight.Actors
                 }
             }
 
+        }
+
+
+        void OnBecameInvisible()
+        {
+            if(onOutofView != null)
+            {
+                onOutofView(transform);
+            }
         }
 
 

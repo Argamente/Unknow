@@ -39,6 +39,11 @@ public class CameraFollow : MonoBehaviour {
     /// <param name="followerTrans"></param>
     public void OnFollowerOutOfView(Transform followerTrans)
     {
+        if(followerTrans == null || m_MainCamera == null)
+        {
+            return;
+        }
+
         Vector3 diff = followerTrans.position - m_MainCamera.position;
         float offsetX = 0;
         float offsetY = 0;

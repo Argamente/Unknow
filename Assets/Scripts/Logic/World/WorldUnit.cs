@@ -44,7 +44,79 @@ namespace Argamente.Fight.Data
         /// 已探索过的子区块
         /// </summary>
         public List<WorldUnit> exploredUnits = null;
-        
+
+        public WorldUnit left = null;
+        public WorldUnit right = null;
+        public WorldUnit up = null;
+        public WorldUnit down = null;
+        public WorldUnit leftUp = null;
+        public WorldUnit rightUp = null;
+        public WorldUnit leftDown = null;
+        public WorldUnit rightDown = null;
+
+
+
+        public void Create(bool isCreateNeighbourUnit)
+        {
+            if (left == null)
+            {
+                left = new WorldUnit();
+                left.Create(false);
+                left.right = this;
+            }
+
+            if(right == null)
+            {
+                right = new WorldUnit();
+                right.Create(false);
+                right.left = this;
+            }
+
+            if(up == null)
+            {
+                up = new WorldUnit();
+                up.Create(false);
+                up.down = this;
+            }
+
+            if(down == null)
+            {
+                down = new WorldUnit();
+                down.Create(false);
+                down.up = this;
+            }
+
+            if(leftUp == null)
+            {
+                leftUp = new WorldUnit();
+                leftUp.Create(false);
+                leftUp.rightDown = this;
+            }
+
+            if(rightUp == null)
+            {
+                rightUp = new WorldUnit();
+                rightUp.Create(false);
+                rightUp.leftDown = this;
+            }
+
+            if(leftDown == null)
+            {
+                leftDown = new WorldUnit();
+                leftDown.Create(false);
+                leftDown.rightUp = this;
+            }
+
+            if(rightDown == null)
+            {
+                rightDown = new WorldUnit();
+                rightDown.Create(false);
+                rightDown.leftUp = this;
+            }
+
+        }
+
+
 
 
         public void Explore(Transform explorer)

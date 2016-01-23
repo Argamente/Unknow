@@ -26,7 +26,7 @@ namespace Argamente.Fight.Data
         public Listener<AbstractWorldUnit> onExplored;
 
 
-        public virtual void RenderUnit(bool explored)
+        public virtual void RenderUnit (bool explored)
         {
 
         }

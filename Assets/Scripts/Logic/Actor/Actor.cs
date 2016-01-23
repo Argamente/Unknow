@@ -8,22 +8,22 @@ namespace Argamente.Fight.Actors
     {
         private AbstarctAction currAction = null;
 
-        private void SetAction(AbstarctAction newAction)
+        private void SetAction (AbstarctAction newAction)
         {
-            if(currAction == newAction)
+            if (currAction == newAction)
             {
-                Debug.LogError("相同的Action切换");
+                Debug.LogError ("相同的Action切换");
                 return;
             }
 
-            if(currAction != null)
+            if (currAction != null)
             {
-                currAction.StopAction();
+                currAction.StopAction ();
             }
             currAction = newAction;
-            if(currAction != null)
+            if (currAction != null)
             {
-                currAction.StartAction();
+                currAction.StartAction ();
             }
         }
 
@@ -39,14 +39,14 @@ namespace Argamente.Fight.Actors
 
 
         private float moveSpeed = 1.5f;
-        
-        void Awake()
+
+        void Awake ()
         {
-            actionForIdle = this.gameObject.AddComponent<ActionForIdle>();
-            actionForMoveUp = this.gameObject.AddComponent<ActionForMoveUp>();
-            actionForMoveDown = this.gameObject.AddComponent<ActionForMoveDown>();
-            actionForMoveLeft = this.gameObject.AddComponent<ActionForMoveLeft>();
-            actionForMoveRight = this.gameObject.AddComponent<ActionForMoveRight>();
+            actionForIdle = this.gameObject.AddComponent<ActionForIdle> ();
+            actionForMoveUp = this.gameObject.AddComponent<ActionForMoveUp> ();
+            actionForMoveDown = this.gameObject.AddComponent<ActionForMoveDown> ();
+            actionForMoveLeft = this.gameObject.AddComponent<ActionForMoveLeft> ();
+            actionForMoveRight = this.gameObject.AddComponent<ActionForMoveRight> ();
 
             actionForMoveUp.moveSpeed = this.moveSpeed;
             actionForMoveDown.moveSpeed = this.moveSpeed;
@@ -55,65 +55,65 @@ namespace Argamente.Fight.Actors
         }
 
 
-        void Update()
+        void Update ()
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown (KeyCode.A))
             {
-                this.SetAction(actionForMoveLeft);
+                this.SetAction (actionForMoveLeft);
             }
-            else if (Input.GetKeyUp(KeyCode.A))
+            else if (Input.GetKeyUp (KeyCode.A))
             {
-                if(currAction == actionForMoveLeft)
+                if (currAction == actionForMoveLeft)
                 {
-                    this.SetAction(actionForIdle);
+                    this.SetAction (actionForIdle);
                 }
             }
 
 
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown (KeyCode.D))
             {
-                this.SetAction(actionForMoveRight);
+                this.SetAction (actionForMoveRight);
             }
-            else if (Input.GetKeyUp(KeyCode.D))
+            else if (Input.GetKeyUp (KeyCode.D))
             {
-                if(currAction == actionForMoveRight)
+                if (currAction == actionForMoveRight)
                 {
-                    this.SetAction(actionForIdle);
+                    this.SetAction (actionForIdle);
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown (KeyCode.W))
             {
-                this.SetAction(actionForMoveUp);
+                this.SetAction (actionForMoveUp);
             }
-            else if (Input.GetKeyUp(KeyCode.W))
+            else if (Input.GetKeyUp (KeyCode.W))
             {
-                if(currAction == actionForMoveUp)
+                if (currAction == actionForMoveUp)
                 {
-                    this.SetAction(actionForIdle);
+                    this.SetAction (actionForIdle);
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown (KeyCode.S))
             {
-                this.SetAction(actionForMoveDown);
+                this.SetAction (actionForMoveDown);
             }
-            else if (Input.GetKeyUp(KeyCode.S))
+            else if (Input.GetKeyUp (KeyCode.S))
             {
-                if(currAction == actionForMoveDown)
+                if (currAction == actionForMoveDown)
                 {
-                    this.SetAction(actionForIdle);
+                    this.SetAction (actionForIdle);
                 }
             }
 
         }
 
 
-        void OnBecameInvisible()
+        void OnBecameInvisible ()
         {
-            if(onOutofView != null)
+            if (onOutofView != null)
             {
-                onOutofView(transform);
+                onOutofView (transform);
             }
         }
 

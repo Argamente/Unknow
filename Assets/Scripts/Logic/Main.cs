@@ -12,7 +12,15 @@ namespace Argamente.Fight
             WorldManager.GetInstance ().Init (explorer.transform);
             WorldManager.GetInstance ().StartWorld ();
         }
-        
+
+
+        void Update ()
+        {
+            if (Input.GetKeyDown (KeyCode.Escape))
+            {
+                Application.Quit ();
+            }
+        }
     }
 }
 

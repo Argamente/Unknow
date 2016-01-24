@@ -12,7 +12,7 @@ namespace Argamente.Fight.Actors
         {
             if (currAction == newAction)
             {
-                Debug.LogError ("相同的Action切换");
+                Argamente.Utils.Log.Error ("相同的Action切换", currAction.name, newAction.name);
                 return;
             }
 
@@ -38,7 +38,7 @@ namespace Argamente.Fight.Actors
         private ActionForMoveRight actionForMoveRight;
 
 
-        private float moveSpeed = 1.5f;
+        private float moveSpeed = 2f;
 
         void Awake ()
         {

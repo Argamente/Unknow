@@ -105,31 +105,29 @@ public class WorldManager : MonoBehaviour
 
     public void StartWorld ()
     {
+        CreateTopLevel (0, 0);
+    }
+
+
+    public void CreateTopLevel (int topLevelIndexPosX, int topLevelIndexPosY)
+    {
         WorldUnit unit = new WorldUnit ();
         unit.unitLevel = 3;
         unit.unit_width_count = 30;
         unit.unit_height_count = 30;
-        unit.realPos_x = 0;
-        unit.realPos_y = 0;
+        unit.realPos_x = topLevelIndexPosX * unit.unit_width;
+        unit.realPos_y = topLevelIndexPosY * unit.unit_height;
+        unit.topLevelIndexPosX = topLevelIndexPosX;
+        unit.topLevelIndexPosY = topLevelIndexPosY;
 
         unit.Create (); 
 
-        topLevelWorldUnits.Add (unit);
-
-        //unit.childWorldUnits [0].Explore (explorer);
+        topLevelWorldUnits.Add (unit); 
     }
 
 
-    void Update ()
+    void FixedUpdate ()
     {
-
-        for (int i = 0; i < topLevelWorldUnits.Count; ++i)
-        {
-            topLevelWorldUnits [i].Explore (explorer);
-        }
-        return;
-
-        //return;
         if (explorer == null)
         {
             return;
@@ -139,17 +137,130 @@ public class WorldManager : MonoBehaviour
         {
             return;
         }
-
+        /*
         ++exploreIndex;
         if (exploreIndex >= topLevelWorldUnits.Count)
         {
             exploreIndex = 0;
         }
+*/
 
-        topLevelWorldUnits [exploreIndex].Explore (this.explorer);
+
+        for (exploreIndex = 0; exploreIndex < topLevelWorldUnits.Count; ++exploreIndex)
+        {
+
+            WorldUnit currTopUnit = topLevelWorldUnits [exploreIndex];
+            // 如果当前顶层区块超出了检查区域
+            if (currTopUnit.IsOutUnitCheckRange (this.explorer))
+            {
+                currTopUnit.ExitExploreRange ();
+            }
+            else
+            {
+                currTopUnit.EnterExploreRange ();
+            }
+
+            // 进入了当前顶层区块
+            if (currTopUnit.IsEnterWorldUnit (this.explorer))
+            {
+                currTopUnit.Explore (this.explorer);
+                CheckAndCreateNeighborTopLevelWorldUnit (currTopUnit);
+            }
+
+        }
     }
 
 
+    // 当进入某一个顶层区块时，就要相应地创建它的相邻顶层区块，
+    private void CheckAndCreateNeighborTopLevelWorldUnit (WorldUnit currTopUnit)
+    {
+        // top Neighbor
+        int neighborIndexPosX = currTopUnit.topLevelIndexPosX;
+        int neighborIndexPosY = currTopUnit.topLevelIndexPosY + 1;
 
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // down Neighbor
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY - 1;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // left Neighbor
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX - 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // right neighbor
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX + 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // left top
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX - 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY + 1;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // left down
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX - 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY - 1;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // right top
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX + 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY + 1;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+        // right down
+        neighborIndexPosX = currTopUnit.topLevelIndexPosX + 1;
+        neighborIndexPosY = currTopUnit.topLevelIndexPosY - 1;
+        if (!IsTopWorldUnitExist (neighborIndexPosX, neighborIndexPosY))
+        {
+            CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
+        }
+
+    }
+
+
+    public bool IsTopWorldUnitExist (int indexPosX, int indexPosY)
+    {
+        bool result = false;
+        for (int i = 0; i < topLevelWorldUnits.Count; ++i)
+        {
+            if (topLevelWorldUnits [i].topLevelIndexPosX == indexPosX && topLevelWorldUnits [i].topLevelIndexPosY == indexPosY)
+            {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
+    private void OnGUI ()
+    {
+        GUILayout.Label ("Explorer Pos:" + this.explorer.position);
+    }
 
 }

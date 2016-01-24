@@ -10,6 +10,13 @@ namespace Argamente.Fight.Data
     {
 
         /// <summary>
+        /// 顶层区块使用的，用于快速定位位置的整形坐标索引 
+        /// </summary>
+        public int topLevelIndexPosX = 0;
+        public int topLevelIndexPosY = 0;
+
+
+        /// <summary>
         /// 当前区块包含的原始区块数量
         /// </summary>
 
@@ -231,12 +238,12 @@ namespace Argamente.Fight.Data
         {
             base.RenderUnit (explored);
 
-            if (!explored)
+            if (!explored && unitObj == null)
             {
                 unitObj = AssetsManager.GetInstance ().InstantiateGameObject (AppConstant.UnExploreConverPrefab);
                 unitObj.transform.position = new Vector3 (realPos_x, realPos_y, 0);
             }
-            else
+            else if (explored)
             {
                 if (unitObj != null)
                 {
@@ -247,10 +254,83 @@ namespace Argamente.Fight.Data
 
         }
 
+        /// <summary>
+        /// 当玩家进入一定范围的时候，就要检查相应的世界区块，以便渲染和消除覆盖层 
+        /// </summary>
+        public void EnterExploreRange ()
+        {
+            if (unitLevel == 0)
+            {
+                RenderUnit (isExplored);
+            }
+            else
+            {
+                for (int i = 0; i < childWorldUnits.Count; ++i)
+                {
+                    childWorldUnits [i].EnterExploreRange ();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 当玩家距离某个顶层区块太远时，则回收这个顶层区块的覆盖层，重复利用 
+        /// </summary>
+        public void ExitExploreRange ()
+        {
+            if (unitLevel == 0)
+            {
+                if (unitObj != null)
+                {
+                    AssetsManager.GetInstance ().DestroyGameObject (AppConstant.UnExploreConverPrefab, unitObj);
+                    unitObj = null;
+                } 
+            }
+            else
+            {
+                for (int i = 0; i < childWorldUnits.Count; ++i)
+                {
+                    childWorldUnits [i].ExitExploreRange ();
+                }
+            }
+            
+        }
 
 
 
+        // 是否进入此区块，
+        public bool IsEnterWorldUnit (Transform explorer)
+        {
+            Vector2 explorerPos = new Vector2 (explorer.position.x, explorer.position.y);
+            float disX = Mathf.Abs (explorerPos.x - realPos_x);
+            float disY = Mathf.Abs (explorerPos.y - realPos_y);
 
+            if (disX <= unit_width + 5 * originWorldUnitSize && disY <= unit_height + 5 * originWorldUnitSize)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// 某个区块是否超出了检查区域，即区块距离玩家距离，超过了当前区块大小的1.5倍
+        /// </summary>
+        /// <returns><c>true</c> if this instance is exit world unit the specified explorer; otherwise, <c>false</c>.</returns>
+        /// <param name="explorer">Explorer.</param>
+        public bool IsOutUnitCheckRange (Transform explorer)
+        {
+            Vector2 explorerPos = new Vector2 (explorer.position.x, explorer.position.y);
+            float disX = Mathf.Abs (explorerPos.x - realPos_x);
+            float disY = Mathf.Abs (explorerPos.y - realPos_y);
+            float outRangeDisX = unit_width * 1.5f;
+            float outRangeDisY = unit_height * 1.5f;
+
+            if (disX > outRangeDisX || disY > outRangeDisY)
+            {
+                return true;
+            }
+            return false;
+        }
 
 
 

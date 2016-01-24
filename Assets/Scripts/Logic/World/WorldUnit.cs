@@ -248,6 +248,7 @@ namespace Argamente.Fight.Data
                 if (unitObj != null)
                 {
                     AssetsManager.GetInstance ().DestroyGameObject (AppConstant.UnExploreConverPrefab, unitObj);
+                    unitObj = null;
                 }
                 
             }
@@ -304,7 +305,7 @@ namespace Argamente.Fight.Data
             float disX = Mathf.Abs (explorerPos.x - realPos_x);
             float disY = Mathf.Abs (explorerPos.y - realPos_y);
 
-            if (disX <= unit_width + 5 * originWorldUnitSize && disY <= unit_height + 5 * originWorldUnitSize)
+            if (disX < unit_width  && disY < unit_height)
             {
                 return true;
             }

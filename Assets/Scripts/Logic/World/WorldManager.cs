@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Argamente.Fight.Data;
+using Argamente.Utils;
 
 
 public class WorldUnitVo
@@ -153,6 +154,7 @@ public class WorldManager : MonoBehaviour
             // 如果当前顶层区块超出了检查区域
             if (currTopUnit.IsOutUnitCheckRange (this.explorer))
             {
+                //Log.Error(this, "超出检查区域:", currTopUnit.topLevelIndexPosX, currTopUnit.topLevelIndexPosY); 
                 currTopUnit.ExitExploreRange ();
             }
             else
@@ -163,11 +165,15 @@ public class WorldManager : MonoBehaviour
             // 进入了当前顶层区块
             if (currTopUnit.IsEnterWorldUnit (this.explorer))
             {
-                currTopUnit.Explore (this.explorer);
+                currTopUnit.Explore(this.explorer);
                 CheckAndCreateNeighborTopLevelWorldUnit (currTopUnit);
             }
 
+            
+
         }
+
+        //Argamente.Utils.Log.Info(this, "TopLevelCount:", topLevelWorldUnits.Count);
     }
 
 
@@ -182,6 +188,7 @@ public class WorldManager : MonoBehaviour
         {
             CreateTopLevel (neighborIndexPosX, neighborIndexPosY);
         }
+       
 
         // down Neighbor
         neighborIndexPosX = currTopUnit.topLevelIndexPosX;

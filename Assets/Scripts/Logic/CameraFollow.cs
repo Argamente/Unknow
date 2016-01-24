@@ -11,27 +11,48 @@ public class CameraFollow : MonoBehaviour {
     }
 
     private Transform m_MainCamera;
+    private Transform m_Follower;
 
     private float ViewSize_Width = 0;
     private float ViewSize_Height = 0;
+    private float halfViewSize_Width = 0.0f;
+    private float halfViewSize_Height = 0.0f;
 
     void Awake()
     {
         m_MainCamera = transform;
         _instance = this;
 
-        // 设置跟随目标
-        GameObject followPlayer = GameObject.FindGameObjectWithTag("Player");
-        if(followPlayer != null)
-        {
-            Actor actor = followPlayer.GetComponent<Actor>();
-            if(actor != null)
-            {
-                actor.onOutofView = this.OnFollowerOutOfView;
-            }
-        }
+        m_Follower = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+
+        //// 设置跟随目标
+        //GameObject followPlayer = GameObject.FindGameObjectWithTag("Player");
+        //if(followPlayer != null)
+        //{
+        //    Actor actor = followPlayer.GetComponent<Actor>();
+        //    if(actor != null)
+        //    {
+        //        actor.onOutofView = this.OnFollowerOutOfView;
+        //    }
+        //}
         CalculateViewPointSize();
     }
+
+    void Update()
+    {
+        float diffX = Mathf.Abs(m_Follower.position.x - m_MainCamera.position.x);
+        float diffY = Mathf.Abs(m_Follower.position.y - m_MainCamera.position.y);
+
+        if (diffX > halfViewSize_Width || diffY > halfViewSize_Height)
+        {
+            OnFollowerOutOfView(m_Follower);
+        }
+    }
+
+
+
+
+
 
     /// <summary>
     /// 如果追随者超出了摄像机范围，则滚动一屏
@@ -76,6 +97,9 @@ public class CameraFollow : MonoBehaviour {
         Debug.Log(bottomLeft + "    " + topRight);
         ViewSize_Width = topRight.x - bottomLeft.x;
         ViewSize_Height = topRight.y - bottomLeft.y;
+
+        halfViewSize_Width = ViewSize_Width / 2;
+        halfViewSize_Height = ViewSize_Height / 2;
     }
 
 }

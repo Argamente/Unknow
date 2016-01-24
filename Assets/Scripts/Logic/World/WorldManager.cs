@@ -38,6 +38,9 @@ public class WorldManager : MonoBehaviour
     private int minLevel = 0;
     private int maxLevel = 3;
 
+    public int currUnitIndexX = 0;
+    public int currUnitIndexY = 0;
+
 
     Dictionary<int,WorldUnitVo> worldUnitConfig = new Dictionary<int,WorldUnitVo> ();
 
@@ -165,6 +168,9 @@ public class WorldManager : MonoBehaviour
             // 进入了当前顶层区块
             if (currTopUnit.IsEnterWorldUnit (this.explorer))
             {
+                currUnitIndexX = currTopUnit.topLevelIndexPosX;
+                currUnitIndexY = currTopUnit.topLevelIndexPosY;
+
                 currTopUnit.Explore(this.explorer);
                 CheckAndCreateNeighborTopLevelWorldUnit (currTopUnit);
             }
@@ -265,9 +271,9 @@ public class WorldManager : MonoBehaviour
     }
 
 
-    private void OnGUI ()
-    {
-        GUILayout.Label ("Explorer Pos:" + this.explorer.position);
-    }
+    //private void OnGUI ()
+    //{
+    //    GUILayout.Label ("Explorer Pos:" + this.explorer.position);
+    //}
 
 }
